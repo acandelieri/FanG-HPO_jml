@@ -124,7 +124,7 @@ FanG_BO.run <- function( search.space,
   paid <- initially.paid
   
   
-  # store optimization process' informations into a suitable data structure 
+  # store optimization process' information into a suitable data structure 
   process.data <- NULL
   for( s in 1:S )
     process.data <- rbind( process.data, data.frame( iteration=0,

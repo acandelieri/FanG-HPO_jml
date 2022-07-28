@@ -5,16 +5,18 @@ set.seed (42)
 cat("> Configuring Python and reticulate...\n")
 library(reticulate)
 if(.Platform$OS.type=="unix") {
-  use_python(python="/home/antonio/anaconda3/envs/py3.8/bin/python",required=T)
+  # use_python(python="/home/antonio/anaconda3/envs/py3.8/bin/python",required=T)
+  use_python(python="/home/ac21041/.conda/envs/autogluonFairBO/bin/python",required=T)
+  autogluonFairBO_results_folder = "/home/ac21041/Desktop/autogluon-0.3.1/FanG-HPO_AutogluonFairBO_runs/XGB_HPO_GERMANCREDIT_results"
+  conda_python("autogluonFairBO")
 } else {
   use_python(python="C:/Users/Public/anaconda3",required=T)
+  autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/XGB_HPO_GERMANCREDIT_results"
+  conda_python("py3.8")
 }
-conda_python("py3.8")
 
 source("core.R")
 # source("AGP.R") # already loaded into 'core.R'
-
-autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/XGB_HPO_GERMANCREDIT_results"
 
 
 # 10-FCV Accuracy and DSP computed on the FULL dataset
@@ -28,7 +30,7 @@ source.1 = function( x ) {
   subsample = x[6]
   max.depth = x[7]
   
-  n.estimators = round(round(2^n.estimators))
+  n.estimators = round(n.estimators)
   learning.rate = round(10^learning.rate,2)
   gamma = round(gamma,1)
   reg.alpha = round(10^reg.alpha,3)
@@ -71,7 +73,7 @@ source.2 = function( x ) {
   subsample = x[6]
   max.depth = x[7]
   
-  n.estimators = round(round(2^n.estimators))
+  n.estimators = round(n.estimators)
   learning.rate = round(10^learning.rate,2)
   gamma = round(gamma,1)
   reg.alpha = round(10^reg.alpha,3)

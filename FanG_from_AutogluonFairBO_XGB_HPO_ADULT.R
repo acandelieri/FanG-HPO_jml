@@ -7,11 +7,11 @@ library(reticulate)
 if(.Platform$OS.type=="unix") {
   # use_python(python="/home/antonio/anaconda3/envs/py3.8/bin/python",required=T)
   use_python(python="/home/ac21041/.conda/envs/autogluonFairBO/bin/python",required=T)
-  autogluonFairBO_results_folder = "/home/ac21041/Desktop/autogluon-0.3.1/FanG-HPO_AutogluonFairBO_runs/XGB_HPO_COMPAS_results"
+  autogluonFairBO_results_folder = "/home/ac21041/Desktop/autogluon-0.3.1/FanG-HPO_AutogluonFairBO_runs/XGB_HPO_ADULT_results"
   conda_python("autogluonFairBO")
 } else {
   use_python(python="C:/Users/Public/anaconda3",required=T)
-  autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/XGB_HPO_COMPAS_results"
+  autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/XGB_HPO_ADULT_results"
   conda_python("py3.8")
 }
 
@@ -38,12 +38,11 @@ source.1 = function( x ) {
   subsample = round(subsample,2)
   max.depth = round(max.depth)
   
-  py_run_string("dataset_name = 'COMPAS_full'")
+  py_run_string("dataset_name = 'ADULT_full'")
   py_run_string("sensitive_features = ['sex.Female',
-                         'race.African.American', 'race.Asian',
-                         'race.Caucasian', 'race.Hispanic', 'race.Native.American']")
-  py_run_string("target = 'two_year_recid'")
-  
+                         'race.White', 'race.Asian.Pac.Islander',
+                         'race.Amer.Indian.Eskimo', 'race.Other']")
+  py_run_string("target = 'income.leq.50k'")  
   # setting XGBoost's hyperparameters
   
   py$n_estimators = as.integer(n.estimators)
@@ -83,11 +82,11 @@ source.2 = function( x ) {
   subsample = round(subsample,2)
   max.depth = round(max.depth)
   
-  py_run_string("dataset_name = 'COMPAS_redux'")
+  py_run_string("dataset_name = 'ADULT_redux'")
   py_run_string("sensitive_features = ['sex.Female',
-                         'race.African.American', 'race.Asian',
-                         'race.Caucasian', 'race.Hispanic', 'race.Native.American']")
-  py_run_string("target = 'two_year_recid'")
+                         'race.White', 'race.Asian.Pac.Islander',
+                         'race.Amer.Indian.Eskimo', 'race.Other']")
+  py_run_string("target = 'income.leq.50k'")
   
   # setting XGBoost's hyperparameters
   
@@ -209,7 +208,7 @@ for( f in files ) {
   cat("> Saving results...")
   if( !dir.exists("results") )
     dir.create("results")
-  saveRDS( object=run.info, file=paste0("results/results_COMPAS_XGB_file_",run,".RDS") )
+  saveRDS( object=run.info, file=paste0("results/results_ADULT_XGB_file_",run,".RDS") )
   cat(" done!\n")
   
   cat("\014")

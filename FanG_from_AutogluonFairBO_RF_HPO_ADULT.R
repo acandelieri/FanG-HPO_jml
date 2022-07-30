@@ -14,7 +14,7 @@ conda_python("py3.8")
 source("core.R")
 # source("AGP.R") # already loaded into 'core.R'
 
-autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/RF_HPO_COMPAS_results"
+autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/RF_HPO_ADULT_results"
 
 
 # 10-FCVAccuracy and DSP computed on the FULL dataset
@@ -26,10 +26,11 @@ source.1 = function( x ) {
   n_estimators = round(n_estimators)
   max_features = round(max_features)
   
-  py_run_string("dataset_name = 'COMPAS_full'")
-  py_run_string("sensitive_features = ['sex.Female', 'race.African.American',
-                         'race.Asian','race.Caucasian', 'race.Hispanic', 'race.Native.American']")
-  py_run_string("target = 'two_year_recid'")
+  py_run_string("dataset_name = 'ADULT_full'")
+  py_run_string("sensitive_features = ['sex.Female',
+                         'race.White', 'race.Asian.Pac.Islander',
+                         'race.Amer.Indian.Eskimo', 'race.Other']")
+  py_run_string("target = 'income.leq.50k'")
   
   # setting RF's hyperparameters
   
@@ -55,10 +56,11 @@ source.2 = function( x ) {
   n_estimators = round(n_estimators)
   max_features = round(max_features)
   
-  py_run_string("dataset_name = 'COMPAS_redux'")
-  py_run_string("sensitive_features = ['sex.Female', 'race.African.American',
-                         'race.Asian','race.Caucasian', 'race.Hispanic', 'race.Native.American']")
-  py_run_string("target = 'two_year_recid'")
+  py_run_string("dataset_name = 'ADULT_redux'")
+  py_run_string("sensitive_features = ['sex.Female',
+                         'race.White', 'race.Asian.Pac.Islander',
+                         'race.Amer.Indian.Eskimo', 'race.Other']")
+  py_run_string("target = 'income.leq.50k'")
   
   # setting RF's hyperparameters
   
@@ -90,7 +92,7 @@ colnames(Omega) = c("min","max")
 Omega[1,'min'] = 100; Omega[1,'max'] = 1000
 
 # max number of features (integer)
-Omega[2,'min'] = 2; Omega[2,'max'] = 19
+Omega[2,'min'] = 2; Omega[2,'max'] = 51
 
 
 sources.costs = c(1,0.5) # from preliminary analysis
@@ -154,7 +156,7 @@ for( f in files ) {
   cat("> Saving results...")
   if( !dir.exists("results") )
     dir.create("results")
-  saveRDS( object=run.info, file=paste0("results/results_COMPAS_RF_file_",run,".RDS") )
+  saveRDS( object=run.info, file=paste0("results/results_ADULT_RF_file_",run,".RDS") )
   cat(" done!\n")
   
   cat("\014")

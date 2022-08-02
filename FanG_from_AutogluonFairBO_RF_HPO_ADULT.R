@@ -18,8 +18,6 @@ if(.Platform$OS.type=="unix") {
 source("core.R")
 # source("AGP.R") # already loaded into 'core.R'
 
-# autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/RF_HPO_ADULT_results"
-
 
 # 10-FCVAccuracy and DSP computed on the FULL dataset
 source.1 = function( x ) {

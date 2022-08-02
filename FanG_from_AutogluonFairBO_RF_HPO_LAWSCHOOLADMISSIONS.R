@@ -30,8 +30,8 @@ source.1 = function( x ) {
   max_features = round(max_features)
   
   py_run_string("dataset_name = 'LAWSCHOOLADMISSIONS_full'")
-  py_run_string("sensitive_features = ['Gender.Female']")
-  py_run_string("target = 'has.bad.credit.risk'")
+  py_run_string("sensitive_features = ['gender.female','race1.asian','race1.black','race1.hisp','race1.other']")
+  py_run_string("target = 'has.passed.bar.exam'")
   
   # setting RF's hyperparameters
   
@@ -58,8 +58,8 @@ source.2 = function( x ) {
   max_features = round(max_features)
   
   py_run_string("dataset_name = 'LAWSCHOOLADMISSIONS_redux'")
-  py_run_string("sensitive_features = ['Gender.Female']")
-  py_run_string("target = 'has.bad.credit.risk'")
+  py_run_string("sensitive_features = ['gender.female','race1.asian','race1.black','race1.hisp','race1.other']")
+  py_run_string("target = 'has.passed.bar.exam'")
   
   # setting RF's hyperparameters
   

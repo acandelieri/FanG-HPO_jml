@@ -5,16 +5,20 @@ set.seed (42)
 cat("> Configuring Python and reticulate...\n")
 library(reticulate)
 if(.Platform$OS.type=="unix") {
-  use_python(python="/home/antonio/anaconda3/envs/py3.8/bin/python",required=T)
+  # use_python(python="/home/antonio/anaconda3/envs/py3.8/bin/python",required=T)
+  use_python(python="/home/ac21041/.conda/envs/autogluonFairBO/bin/python",required=T)
+  autogluonFairBO_results_folder = "/home/ac21041/Desktop/autogluon-0.3.1/FanG-HPO_AutogluonFairBO_runs/RF_HPO_ADULT_results"
+  conda_python("autogluonFairBO")
 } else {
   use_python(python="C:/Users/Public/anaconda3",required=T)
+  autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/RF_HPO_ADULT_results"
+  conda_python("py3.8")
 }
-conda_python("py3.8")
 
 source("core.R")
 # source("AGP.R") # already loaded into 'core.R'
 
-autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/RF_HPO_ADULT_results"
+# autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/RF_HPO_ADULT_results"
 
 
 # 10-FCVAccuracy and DSP computed on the FULL dataset

@@ -20,7 +20,7 @@ source("core.R")
 # source("AGP.R") # already loaded into 'core.R'
 
 
-# 10-FCVAccuracy and DSP computed on the FULL dataset
+# 10-FCV Accuracy and DSP computed on the FULL dataset
 source.1 = function( x ) {
   
   n_estimators = x[1]
@@ -48,7 +48,7 @@ source.1 = function( x ) {
   
 }
 
-# 10-FCVAccuracy and DSP computed on the REDUX dataset  
+# 10-FCV Accuracy and DSP computed on the REDUX dataset  
 source.2 = function( x ) {
   
   n_estimators = x[1]
@@ -124,11 +124,17 @@ for( f in files ) {
 
   Y.tmp = NULL
   for( i in 1:nrow(X.tmp) ) {
-    res = source.1(X.tmp[i,])
+    if( i <= round(nrow(X.tmp)/2) ) {
+      # from source #1
+      res = source.1(X.tmp[i,])
+    } else {
+      # from source #2
+      res = source.1(X.tmp[i,])
+    }
     Y.tmp =  rbind(Y.tmp,res)
   }
   
-  ixs = sample(1:nrow(X.tmp),d+1,replace=F)
+  ixs = 1:round(nrow(X.tmp)/2)
   X[[1]] = X.tmp[ixs,]
   X[[2]] = X.tmp[-ixs,]
   Y[[1]] = Y.tmp[ixs,]

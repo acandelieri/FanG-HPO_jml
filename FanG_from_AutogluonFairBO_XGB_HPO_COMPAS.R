@@ -178,11 +178,17 @@ for( f in files ) {
 
   Y.tmp = NULL
   for( i in 1:nrow(X.tmp) ) {
-    res = source.1(X.tmp[i,])
+    if( i <= round(nrow(X.tmp)/2) ) {
+      # from source #1
+      res = source.1(X.tmp[i,])
+    } else {
+      # from source #2
+      res = source.1(X.tmp[i,])
+    }
     Y.tmp =  rbind(Y.tmp,res)
   }
   
-  ixs = sample(1:nrow(X.tmp),d+1,replace=F)
+  ixs = 1:round(nrow(X.tmp)/2)
   X[[1]] = X.tmp[ixs,]
   X[[2]] = X.tmp[-ixs,]
   Y[[1]] = Y.tmp[ixs,]

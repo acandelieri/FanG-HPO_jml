@@ -1,9 +1,9 @@
 import pandas as pd
 import time
-import xgboost as xgb
 
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import StratifiedKFold
+from sklearn.svm import SVC
 
 from fairness import statistical_parity_difference
 
@@ -23,13 +23,8 @@ y = dataset[target]
 
 # -------------- set on the R side ---------------------------------------
 # # Hyperparameters
-# n_estimators {1,...,256} logarithmic (base 2)
-# learning_rate [0.01,1] logarithmic (base 10)
-# gamma [0,0.1] linear
-# reg_alpha [10^-3, 10^3] logarithmic (base 10)
-# reg_lambda [10^-3, 10^3] logarithmic base(10)
-# subsample [0.01,1] linear
-# max_depth {1,...,16} linear
+# svmC in [0.001;1000] (log10)
+# gamma in [0.001;1000] (log10)
 # ------------------------------------------------------------------------
 
 
@@ -45,12 +40,9 @@ for train_idx, test_idx in kf.split(X, y):
   start = time.time()
 
   # Train the classifier and predict on test set
-  classifier = xgb.XGBClassifier( n_jobs=8,
-      objective="binary:logistic",random_state=1,use_label_encoder=False,
-      n_estimators=n_estimators,learning_rate=learning_rate,
-      gamma=gamma, reg_alpha=reg_alpha, reg_lambda=reg_lambda,
-      subsample=subsample, max_depth=max_depth ).fit(X_train, y_train)
+  classifier = SVC( C=svmC, kernel='rbf', gamma=gamma, random_state=1 ).fit(X_train, y_train)
     
+
   res['train_time'].append(time.time() - start)
   y_pred = classifier.predict(X_test)
 

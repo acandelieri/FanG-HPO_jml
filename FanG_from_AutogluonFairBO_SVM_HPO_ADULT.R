@@ -1,17 +1,17 @@
 rm(list=ls()); graphics.off(); cat("\014")
 
-set.seed(42)
+set.seed (42)
 
 cat("> Configuring Python and reticulate...\n")
 library(reticulate)
 if(.Platform$OS.type=="unix") {
   # use_python(python="/home/antonio/anaconda3/envs/py3.8/bin/python",required=T)
   use_python(python="/home/ac21041/.conda/envs/autogluonFairBO/bin/python",required=T)
-  autogluonFairBO_results_folder = "/home/ac21041/Desktop/autogluon-0.3.1/FanG-HPO_AutogluonFairBO_runs/XGB_HPO_COMPAS_results"
+  autogluonFairBO_results_folder = "/home/ac21041/Desktop/autogluon-0.3.1/FanG-HPO_AutogluonFairBO_runs/SVM_HPO_ADULT_results"
   conda_python("autogluonFairBO")
 } else {
   use_python(python="C:/Users/Public/anaconda3",required=T)
-  autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/XGB_HPO_COMPAS_results"
+  autogluonFairBO_results_folder = "G:/Il mio Drive/AutogluonFairBO_results/SVM_HPO_ADULT_results"
   conda_python("py3.8")
 }
 
@@ -22,43 +22,25 @@ source("core.R")
 # 10-FCV Accuracy and DSP computed on the FULL dataset
 source.1 = function( x ) {
   
-  n.estimators = x[1]
-  learning.rate = x[2]
-  gamma = x[3]
-  reg.alpha = x[4]
-  reg.lambda = x[5]
-  subsample = x[6]
-  max.depth = x[7]
+  svmC = 10^x[1]
+  gamma =10^ x[2]
   
-  n.estimators = round(n.estimators)
-  learning.rate = round(10^learning.rate,2)
-  gamma = round(gamma,1)
-  reg.alpha = round(10^reg.alpha,3)
-  reg.lambda = round(10^reg.lambda,3)
-  subsample = round(subsample,2)
-  max.depth = round(max.depth)
-  
-  py_run_string("dataset_name = 'COMPAS_full'")
+  py_run_string("dataset_name = 'ADULT_full'")
   py_run_string("sensitive_features = ['sex.Female',
-                         'race.African.American', 'race.Asian',
-                         'race.Caucasian', 'race.Hispanic', 'race.Native.American']")
-  py_run_string("target = 'two_year_recid'")
+                         'race.White', 'race.Asian.Pac.Islander',
+                         'race.Amer.Indian.Eskimo', 'race.Other']")
+  py_run_string("target = 'income.leq.50k'")
   
-  # setting XGBoost's hyperparameters
+  # setting SVM classifier's hyperparameters
   
-  py$n_estimators = as.integer(n.estimators)
-  py$learning_rate = learning.rate
+  py$svmC = svmC
   py$gamma = gamma
-  py$reg_alpha = reg.alpha
-  py$reg_lambda = reg.lambda
-  py$subsample = subsample
-  py$max_depth = as.integer(max.depth)
 
-  py_run_file("kfold_stratified_XGB.py")
+  py_run_file("kfold_stratified_SVM.py")
   
   MCE = 1-round(mean(unlist(py$res$accuracy)),4)
   DSP = matrix(round(unlist(py$res$dsp),4),ncol=length(py$sensitive_features),byrow=T)
-  DSP = max(apply(DSP,1,mean))
+  DSP = round(max(apply(DSP,1,mean)),4)
   
   return( c(MCE,DSP) )
   
@@ -67,43 +49,25 @@ source.1 = function( x ) {
 # 10-FCV Accuracy and DSP computed on the REDUX dataset  
 source.2 = function( x ) {
   
-  n.estimators = x[1]
-  learning.rate = x[2]
-  gamma = x[3]
-  reg.alpha = x[4]
-  reg.lambda = x[5]
-  subsample = x[6]
-  max.depth = x[7]
+  svmC = 10^x[1]
+  gamma = 10^x[2]
   
-  n.estimators = round(n.estimators)
-  learning.rate = round(10^learning.rate,2)
-  gamma = round(gamma,1)
-  reg.alpha = round(10^reg.alpha,3)
-  reg.lambda = round(10^reg.lambda,3)
-  subsample = round(subsample,2)
-  max.depth = round(max.depth)
-  
-  py_run_string("dataset_name = 'COMPAS_redux'")
+  py_run_string("dataset_name = 'ADULT_redux'")
   py_run_string("sensitive_features = ['sex.Female',
-                         'race.African.American', 'race.Asian',
-                         'race.Caucasian', 'race.Hispanic', 'race.Native.American']")
-  py_run_string("target = 'two_year_recid'")
+                         'race.White', 'race.Asian.Pac.Islander',
+                         'race.Amer.Indian.Eskimo', 'race.Other']")
+  py_run_string("target = 'income.leq.50k'")
   
-  # setting XGBoost's hyperparameters
+  # setting SVM classifier's hyperparameters
   
-  py$n_estimators = as.integer(n.estimators)
-  py$learning_rate = learning.rate
+  py$svmC = svmC
   py$gamma = gamma
-  py$reg_alpha = reg.alpha
-  py$reg_lambda = reg.lambda
-  py$subsample = subsample
-  py$max_depth = as.integer(max.depth)
   
-  py_run_file("kfold_stratified_XGB.py")
+  py_run_file("kfold_stratified_SVM.py")
   
   MCE = 1-round(mean(unlist(py$res$accuracy)),4)
   DSP = matrix(round(unlist(py$res$dsp),4),ncol=length(py$sensitive_features),byrow=T)
-  DSP = max(apply(DSP,1,mean))
+  DSP = round(max(apply(DSP,1,mean)),4)
   
   return( c(MCE,DSP) )
   
@@ -113,37 +77,21 @@ sources = list( source.1, source.2 )
 
 
 
-d = 7 # XGboost's hyperparameters
+d = 2 # number of SVM classifier's hyperparameters
 M = 2 # number of objectives
 
+# hyperparameters' search space
 Omega = matrix( NA, d, 2 )
 colnames(Omega) = c("min","max")
 
-# number of estimators (integer)
-Omega[1,'min'] = 2; Omega[1,'max'] = 256
+# C (log10)
+Omega[1,'min'] = log(10^-3,10); Omega[1,'max'] = log(10^3,10)
 
-# learning rate (log10)
-Omega[2,'min'] = log(10^-2,10); Omega[2,'max'] = log(10,10)
-
-# gamma (double)
-Omega[3,'min'] = 0.0; Omega[3,'max'] = 0.1 
-
-# reg.alpha (log10)
-Omega[4,'min'] = log(10^-3,10); Omega[4,'max'] = log(10^3,10)
-
-# reg.lambda (log10)
-Omega[5,'min'] = log(10^-3,10); Omega[5,'max'] = log(10^3,10) 
-
-# subsample (double)
-Omega[6,'min'] = 0.01; Omega[6,'max'] = 1.0 
-
-# max.depth (integer)
-Omega[7,'min'] = 1; Omega[7,'max'] = 16 
-
+# gamma (log10)
+Omega[2,'min'] = log(10^-3,10); Omega[2,'max'] = log(10^3,10)
 
 
 sources.costs = c(1,0.5) # from preliminary analysis
-
 
 
 # initial design from AutoGluon - FairBO experiments (source "FULL" only!)
@@ -151,7 +99,7 @@ files = list.files(autogluonFairBO_results_folder)
 
 n.runs = length(files)
 
-for( f in files ) {
+for( f in files[5] ) {
   
   run = as.integer(strsplit(gsub(".csv","",f,fixed=T),"_")[[1]][2])
   
@@ -168,17 +116,13 @@ for( f in files ) {
   tmp = tmp[which(tmp$run<=2*(d+1)),]
   tmp = unique(tmp[,2+(1:nrow(Omega))])
   
-  X.tmp = tmp$n_estimators
-  X.tmp = cbind(X.tmp,log10(tmp$learning_rate))
-  X.tmp = cbind(X.tmp,tmp$gamma)
-  X.tmp = cbind(X.tmp,log10(tmp$reg_alpha))
-  X.tmp = cbind(X.tmp,log10(tmp$reg_lambda))
-  X.tmp = cbind(X.tmp,tmp$subsample)
-  X.tmp = cbind(X.tmp,tmp$max_depth)
+  X.tmp =round(log(tmp$C,10),3)
+  X.tmp = cbind(X.tmp,round(log(tmp$gamma,10),3))
 
   Y.tmp = NULL
   for( i in 1:nrow(X.tmp) ) {
     if( i <= round(nrow(X.tmp)/2) ) {
+      cat(i,"/",nrow(X.tmp),"... ",sep="")
       # from source #1
       res = source.1(X.tmp[i,])
     } else {
@@ -194,6 +138,19 @@ for( f in files ) {
   Y[[1]] = Y.tmp[ixs,]
   Y[[2]] = Y.tmp[-ixs,]
   initially.paid = nrow(X[[1]])*sources.costs[1] + nrow(X[[2]])*sources.costs[2] 
+  
+  # -----------------------------------------------    
+  # ad-hoc patch: if y values are identical the GP
+  # cannot be trained by the DiceKriging library
+  # so we add a  small noise on just one y value.
+  for( k1 in 1:2 ) {
+    for( k2 in 1:2 ) {
+      if( all(Y[[k1]][,k2]==Y[[k1]][1,k2]) ){
+        Y[[k1]][1,k2] = Y[[k1]][1,k2]+10^-8
+      } 
+    }
+  }
+  # -----------------------------------------------    
   
   
   run.info = FanG_BO.run( search.space=Omega,
@@ -215,7 +172,7 @@ for( f in files ) {
   cat("> Saving results...")
   if( !dir.exists("results") )
     dir.create("results")
-  saveRDS( object=run.info, file=paste0("results/results_COMPAS_XGB_file_",run,".RDS") )
+  saveRDS( object=run.info, file=paste0("results/results_ADULT_SVM_file_",run,".RDS") )
   cat(" done!\n")
   
   cat("\014")

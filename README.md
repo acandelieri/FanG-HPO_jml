@@ -81,15 +81,13 @@ in order to guarantee a fair comparison between the diffferent methods. For more
 experments with AutogluonFairBO and BoTorchMOMF is also freely available but in two
 separated repositories:
 
-  Autogluon-FairBO:
-    https://drive.google.com/drive/folders/1-2PYP6uS-r8Oe70ZwSxplJr6kaWPdDCM?usp=sharing
-  (for installation and configuration, please use the official documentation of
-  autogluon).
-
-BoTorch-MOMF:
-  https://github.com/andreaponti5/FanG-HPO-MOMF.git
-  (for installation and configuration, please use the official documentation of
-  BoTorch).
+   Autogluon-FairBO:
+   https://drive.google.com/drive/folders/1-2PYP6uS-r8Oe70ZwSxplJr6kaWPdDCM?usp=sharing
+   (for installation and configuration, please use official documentation of autogluon).
+   
+   BoTorch-MOMF:
+   https://github.com/andreaponti5/FanG-HPO-MOMF.git
+   (for installation and configuration, please use official documentation of BoTorch).
 *****************************************************************************************
    
 

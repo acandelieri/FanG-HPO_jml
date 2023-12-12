@@ -68,28 +68,28 @@ in order to guarantee a fair comparison between the diffferent methods. For more
 
 2) AutogluonFairBO results must be downloaded from:
 
-https://drive.google.com/drive/folders/1qxSU2iuyvf1BZFfkDyrYPLSueyFPc3J3
+    https://drive.google.com/drive/folders/1qxSU2iuyvf1BZFfkDyrYPLSueyFPc3J3
 
-and local pathways to the folders must be updated in all the files
+   and local pathways to the folders must be updated in all the files
+   
+    FanG_from_AutogluonFairBO_<MLalgo>_<dataset>.R
 
-FanG_from_AutogluonFairBO_<MLalgo>_<dataset>.R
-
-before running them
+  before running them.
 
 
 3) This R project refers only to the code needed to run FanG-HPO. The code for running
 experments with AutogluonFairBO and BoTorchMOMF is also freely available but in two
 separated repositories:
 
-Autogluon-FairBO:
-https://drive.google.com/drive/folders/1-2PYP6uS-r8Oe70ZwSxplJr6kaWPdDCM?usp=sharing
-(for installation and configuration, please use the official documentation of
-autogluon).
+  Autogluon-FairBO:
+    https://drive.google.com/drive/folders/1-2PYP6uS-r8Oe70ZwSxplJr6kaWPdDCM?usp=sharing
+  (for installation and configuration, please use the official documentation of
+  autogluon).
 
 BoTorch-MOMF:
-https://github.com/andreaponti5/FanG-HPO-MOMF.git
-(for installation and configuration, please use the official documentation of
-BoTorch).
+  https://github.com/andreaponti5/FanG-HPO-MOMF.git
+  (for installation and configuration, please use the official documentation of
+  BoTorch).
 *****************************************************************************************
    
 

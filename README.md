@@ -68,13 +68,13 @@ in order to guarantee a fair comparison between the diffferent methods. For more
 
 2) AutogluonFairBO results must be downloaded from:
 
-    https://drive.google.com/drive/folders/1qxSU2iuyvf1BZFfkDyrYPLSueyFPc3J3
-
+   https://drive.google.com/drive/folders/1qxSU2iuyvf1BZFfkDyrYPLSueyFPc3J3
+   
    and local pathways to the folders must be updated in all the files
    
-    FanG_from_AutogluonFairBO_<MLalgo>_<dataset>.R
-
-  before running them.
+   FanG_from_AutogluonFairBO_<MLalgo>_<dataset>.R
+   
+   before running them.
 
 
 3) This R project refers only to the code needed to run FanG-HPO. The code for running
